@@ -1,0 +1,285 @@
+openapi: 3.0.1
+info:
+  title: API de partidos
+  description: API do projeto de Partidos relativo à avaliação da Sprint 4.
+  version: 0.0.1
+  contact:
+    name: Rian Tedesco
+    email: rian.tedesco_BOLS@compasso.com.br
+externalDocs:
+  description: Link do projeto no GitHub
+  url: https://github.com/riantedesco/Avaliacao4.git
+servers:
+- url: https://www.google.com/
+  description: API  de estados
+paths:
+  /partidos:
+    post:
+      summary: Cria um novo partido
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Partido"
+      responses:
+        201:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partido"
+    get:
+      summary: Busca partidos (com filtro por ideologia)
+      parameters:
+      - name: ideologia
+        in: query
+        schema:
+          type: string
+        required: false
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Partido"
+        404:
+          description: Ideologia não encontrada
+          content:
+            application/json:
+              example: "Not Found"
+  /partidos/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Busca partidos pelo seu id
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partido"
+        404:
+          description: Partido não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+    put:
+      summary: Atualiza partidos pelo seu id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Partido"
+      responses:
+        201:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partido"
+        404:
+          description: Partido não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+    delete:
+      summary: Remove partidos pelo seu id
+      responses:
+        200:
+          description: Sucesso
+        404:
+          description: Partido não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+  /partidos/{id}/associados:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Busca os associados do partido
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Associado"
+        404:
+          description: Partido não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+  /associados:
+    post:
+        summary: Cria um novo associado
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associado"
+        responses:
+          201:
+            description: Sucesso
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Associado"
+    get:
+      summary: Busca associados (com filtro por cargo político)
+      parameters:
+      - name: cargoPolitico
+        in: query
+        schema:
+          type: string
+        required: false
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Associado"
+        404:
+          description: Cargo político não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+  /associados/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Busca associados pelo seu id
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associado"
+        404:
+          description: Associado não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+    put:
+      summary: Atualiza associados pelo seu id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Associado"
+      responses:
+        201:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associado"
+        404:
+          description: Associado não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+    delete:
+      summary: Remove associados pelo seu id
+      responses:
+        200:
+          description: Sucesso
+        404:
+          description: Associado não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+  /associados/partidos:
+    post:
+        summary: Associa um associado a um partido
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssociadoPartido"
+        responses:
+          201:
+            description: Sucesso
+          404:
+            description: Associado ou partido não encontrados
+            content:
+              application/json:
+                example: "Not Found"
+  /associados/{idAssociado}/partidos/{idPartido}:
+    parameters:
+    - name: idAssociado
+      in: path
+      schema:
+        type: integer
+      required: true
+    - name: idPartido
+      in: path
+      schema:
+        type: integer
+      required: true
+    delete:
+      summary: Remove associados de seus partidos
+      responses:
+        200:
+          description: Sucesso
+        404:
+          description: Associado não encontrado
+          content:
+            application/json:
+              example: "Not Found"
+components:
+  schemas:
+    Partido:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        sigla:
+          type: string
+        ideologia:
+          type: string
+        dataFundacao:
+          type: string
+          format: date
+    Associado:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        cargoPolitico:
+          type: string
+        dataNascimento:
+          type: string
+          format: date
+    AssociadoPartido:
+      type: object
+      properties:
+        idAssociado:
+          type: integer
+        idPartido:
+          type: integer
